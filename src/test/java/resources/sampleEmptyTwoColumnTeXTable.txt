@@ -1,0 +1,3 @@
+\begin{tabular}{| c | c |}
+
+\end{tabular}
