@@ -10,26 +10,33 @@ public class ArrayTable implements Table {
     private ArrayList<ArrayList<String>> table = new ArrayList<>();
 
     private RowFactory rowFactory;
+    private ColumnFactory columnFactory;
 
-    public ArrayTable(RowFactory rowFactory) {
+    public ArrayTable(RowFactory rowFactory, ColumnFactory columnFactory) {
 
         if (rowFactory == null) {
             throw new IllegalArgumentException("Row factory may not be null.");
         }
 
+        if (columnFactory == null) {
+            throw new IllegalArgumentException("Column factory may not be null.");
+        }
+
         this.rowFactory = rowFactory;
+        this.columnFactory = columnFactory;
+
     }
 
-    public ArrayTable(Table table, RowFactory rowFactory) {
+    public ArrayTable(Table table, RowFactory rowFactory, ColumnFactory columnFactory) {
 
-        this(rowFactory);
+        this(rowFactory, columnFactory);
         table.rows().forEach(this::appendRow);
 
     }
 
-    public ArrayTable(List<List<String>> values, RowFactory rowFactory) {
+    public ArrayTable(List<List<String>> values, RowFactory rowFactory, ColumnFactory columnFactory) {
 
-        this(rowFactory);
+        this(rowFactory, columnFactory);
         values.stream().map(ArrayList::new).forEach(table::add);
 
     }
@@ -121,7 +128,22 @@ public class ArrayTable implements Table {
 
     @Override
     public Stream<Column> columns() {
-        return null;
+
+        ArrayList<Column> columns = new ArrayList<>();
+
+        for (int x = 0; x < table.get(0).size(); x++) {
+
+            Column column = columnFactory.create();
+
+            for (ArrayList<String> row : table) {
+                column.append(row.get(x));
+            }
+
+            columns.add(column);
+
+        }
+        return columns.stream();
+
     }
 
     @Override
@@ -171,7 +193,8 @@ public class ArrayTable implements Table {
                 return false;
             }
         }
-        return true;
+
+        return !otherIterator.hasNext() && !thisIterator.hasNext();
 
     }
 }

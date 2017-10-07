@@ -6,8 +6,9 @@ public class TableReducer {
 
     private Table table;
     private TableFactory tableFactory;
+    private TablePermuter tablePermuter;
 
-    public TableReducer(Table table, TableFactory tableFactory) {
+    public TableReducer(Table table, TableFactory tableFactory, TablePermuter tablePermuter) {
 
         if (table == null) {
             throw new IllegalArgumentException("Table may not be null.");
@@ -17,13 +18,21 @@ public class TableReducer {
             throw new IllegalArgumentException("Table factory may not be null.");
         }
 
+        if (tablePermuter == null) {
+            throw new IllegalArgumentException("Table permuter may not be null.");
+        }
+
         this.table = table;
         this.tableFactory = tableFactory;
+        this.tablePermuter = tablePermuter;
 
     }
 
     public Table reduce() {
+
+        List<Table> permutations = tablePermuter.getPermutations();
         return reduce(1);
+
     }
 
     private Table reduce(int row) {

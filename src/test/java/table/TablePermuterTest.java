@@ -42,7 +42,7 @@ public class TablePermuterTest {
         when(r2.asArrayList()).thenReturn(new ArrayList<>(r2Values));
         when(r3.asArrayList()).thenReturn(new ArrayList<>(r3Values));
 
-        Table table = new ArrayTable(new RowFactory());
+        Table table = new ArrayTable(new RowFactory(), new ColumnFactory());
 
         table.appendRow(r1);
         table.appendRow(r2);
