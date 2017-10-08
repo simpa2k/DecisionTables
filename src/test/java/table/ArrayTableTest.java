@@ -242,5 +242,9 @@ public class ArrayTableTest {
         assertFalse(column == null);
         verify(mockColumnFactory).create();
 
+        verify(c2).append(THREE_ROW_ITEMS.get(0));
+        verify(c2).append(THREE_ROW_ITEMS.get(1));
+        verify(c2).append(THREE_ROW_ITEMS.get(2));
+
     }
 }
