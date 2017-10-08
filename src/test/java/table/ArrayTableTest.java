@@ -235,12 +235,12 @@ public class ArrayTableTest {
 
         Column c2 = mock(Column.class);
 
-        when(mockColumnFactory.create(THREE_ROW_ITEMS)).thenReturn(c2);
+        when(mockColumnFactory.create()).thenReturn(c2);
 
         Column column = arrayTable.getColumn(0);
 
         assertFalse(column == null);
-        verify(mockColumnFactory).create(THREE_ROW_ITEMS);
+        verify(mockColumnFactory).create();
 
     }
 }
