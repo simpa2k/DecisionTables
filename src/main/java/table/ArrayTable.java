@@ -106,7 +106,7 @@ public class ArrayTable implements Table {
 
     @Override
     public void appendColumnHeaders(Row columnHeaders) {
-
+        table.add(0, columnHeaders.asArrayList());
     }
 
     @Override
