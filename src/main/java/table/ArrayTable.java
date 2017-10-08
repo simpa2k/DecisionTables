@@ -7,6 +7,7 @@ import java.util.stream.Stream;
 
 public class ArrayTable implements Table {
 
+    private ArrayList<String> columnHeaders = new ArrayList<>();
     private ArrayList<ArrayList<String>> table = new ArrayList<>();
 
     private RowFactory rowFactory;
@@ -106,7 +107,7 @@ public class ArrayTable implements Table {
 
     @Override
     public void appendColumnHeaders(Row columnHeaders) {
-        table.add(0, columnHeaders.asArrayList());
+        this.columnHeaders = columnHeaders.asArrayList();
     }
 
     @Override
@@ -142,7 +143,7 @@ public class ArrayTable implements Table {
 
     @Override
     public Row getColumnHeaders() {
-        return getRow(0);
+        return rowFactory.create(columnHeaders);
     }
 
     @Override
@@ -176,6 +177,13 @@ public class ArrayTable implements Table {
     public String toString() {
 
         StringBuilder builder = new StringBuilder();
+
+        if (!columnHeaders.isEmpty()) {
+
+            builder.append(columnHeaders);
+            builder.append("\n");
+
+        }
 
         table.forEach(row -> {
 
