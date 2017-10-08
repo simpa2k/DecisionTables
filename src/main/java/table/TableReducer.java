@@ -5,6 +5,7 @@ import java.util.*;
 public class TableReducer {
 
     private Table table;
+    private Table reducedTable;
     private TableFactory tableFactory;
     private TablePermuter tablePermuter;
 
@@ -26,40 +27,42 @@ public class TableReducer {
         this.tableFactory = tableFactory;
         this.tablePermuter = tablePermuter;
 
+        reducedTable = tableFactory.create();
+
     }
 
     public Table reduce() {
 
         List<Table> permutations = tablePermuter.getPermutations();
-        return reduce(1);
+        reduce(1);
+
+        //reducedTable.appendColumn(table.getColumn(0));
+        reducedTable.appendColumnHeaders(table.getColumnHeaders());
+
+        return reducedTable;
 
     }
 
-    private Table reduce(int row) {
-
-        Table reducedTable = tableFactory.create();
+    private void reduce(int row) {
 
         Collection<ArrayList<Column>> columnsByValue = pickOutSameValues(row);
 
         columnsByValue.forEach(columns -> {
 
-            if (columns.stream()
+            if (columns.size() > 1) {
+
+                if (columns.stream()
                     .map(column -> column.getEndingPoint())
                     .distinct()
                     .count() <= 1) { // All ending points the same.
 
-                reducedTable.appendColumn(columns.get(0).replaceAllFromRow(row, "*"));
+                    reducedTable.appendColumn(columns.get(0).replaceAllFromRow(row, "*"));
 
-            } else {
-                reduce(row + 1);
+                } else {
+                    reduce(row + 1);
+                }
             }
         });
-
-        reducedTable.appendColumn(table.getColumn(0));
-        reducedTable.appendColumnHeaders(table.getColumnHeaders());
-
-        return reducedTable;
-
     }
 
     private Collection<ArrayList<Column>> pickOutSameValues(int row) {
