@@ -41,11 +41,13 @@ public class Column {
 
     public Column replaceAllFromRow(int fromRow, String value) {
 
-        List<String> replaced = values.subList(fromRow, values.size());
+        List<String> replaced = values.subList(fromRow, values.size() - 1); // ToDo: The -1 is for handling result values. Refactor so that those values are stored separately.
         replaced.replaceAll(content -> value);
 
-        ArrayList<String> result = new ArrayList<String>(values.subList(0, fromRow));
+        ArrayList<String> result = new ArrayList<>(values.subList(0, fromRow));
+
         result.addAll(replaced);
+        result.add(values.get(values.size() - 1)); // ToDo: This is for handling result values. Refactor so that those values are stored separately.
 
         return columnFactory.create(result);
 
