@@ -10,7 +10,7 @@ import static org.junit.Assert.assertEquals;
 public class ColumnTest {
 
     private Column createFourItemcolumn() {
-        return new Column(new ArrayList<>(Arrays.asList("v1", "v2", "v3", "v4")));
+        return new Column(new ColumnFactory(), new ArrayList<>(Arrays.asList("v1", "v2", "v3", "v4")));
     }
 
     @Test

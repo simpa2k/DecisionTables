@@ -1,15 +1,22 @@
 package table;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Column {
 
+    private ColumnFactory columnFactory;
     private ArrayList<String> values = new ArrayList<>();
 
-    public Column() {}
+    public Column(ColumnFactory columnFactory) {
+        this.columnFactory = columnFactory;
+    }
 
-    public Column(ArrayList<String> values) {
+    public Column(ColumnFactory columnFactory, ArrayList<String> values) {
+
+        this(columnFactory);
         this.values.addAll(values);
+
     }
 
     public String getValue(int row) {
@@ -33,7 +40,15 @@ public class Column {
     }
 
     public Column replaceAllFromRow(int fromRow, String value) {
-        return null;
+
+        List<String> replaced = values.subList(fromRow, values.size());
+        replaced.replaceAll(content -> value);
+
+        ArrayList<String> result = new ArrayList<String>(values.subList(0, fromRow));
+        result.addAll(replaced);
+
+        return columnFactory.create(result);
+
     }
 
     public ArrayList<String> asArrayList() {
