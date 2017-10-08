@@ -78,7 +78,7 @@ public class ArrayTable implements Table {
 
     @Override
     public void appendColumn(Column column) {
-
+        columnFactory.create(column.asArrayList());
     }
 
     @Override

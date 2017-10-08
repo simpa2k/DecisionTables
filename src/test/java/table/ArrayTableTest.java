@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.mockito.Mockito.*;
 
 public class ArrayTableTest {
@@ -236,8 +237,9 @@ public class ArrayTableTest {
 
         when(mockColumnFactory.create(THREE_ROW_ITEMS)).thenReturn(c2);
 
-        arrayTable.getColumn(0);
+        Column column = arrayTable.getColumn(0);
 
+        assertFalse(column == null);
         verify(mockColumnFactory).create(THREE_ROW_ITEMS);
 
     }
