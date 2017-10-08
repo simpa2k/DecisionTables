@@ -302,4 +302,18 @@ public class ArrayTableTest {
         verify(mockRowFactory).create(columnHeaders);
 
     }
+
+    @Test
+    public void testGetColumnHeadersOnTableWithoutColumnHeaders() {
+
+        ArrayTable arrayTable = createArrayTableWithTwoRows();
+
+        Row rowToBeReturned = mock(Row.class);
+        when(mockRowFactory.create(new ArrayList<>())).thenReturn(rowToBeReturned);
+
+        arrayTable.getColumnHeaders();
+
+        verify(mockRowFactory).create(new ArrayList<>());
+
+    }
 }
