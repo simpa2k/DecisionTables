@@ -133,7 +133,7 @@ public class ArrayTable implements Table {
             columnObj.append(row.get(column));
         }
 
-        return columnFactory.create();
+        return columnObj;
     }
 
     @Override
