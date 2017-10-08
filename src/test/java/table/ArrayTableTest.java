@@ -271,4 +271,14 @@ public class ArrayTableTest {
         assertEquals("[, c1, c2]\n[v1, v2, v3]\n[v1, v2, v3]\n", arrayTable.toString());
 
     }
+
+    @Test(expected = NullPointerException.class)
+    public void testAppendColumnHeadersWithNullRow() {
+
+        ArrayTable arrayTable = createArrayTableWithTwoRows();
+
+        Row row = null;
+        arrayTable.appendColumnHeaders(row);
+
+    }
 }
