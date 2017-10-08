@@ -127,6 +127,10 @@ public class ArrayTable implements Table {
     @Override
     public Column getColumn(int column) {
 
+        if (column < 0) {
+            throw new IllegalArgumentException("Column must be non-negative.");
+        }
+
         Column columnObj = columnFactory.create();
 
         for (ArrayList<String> row : table) {
