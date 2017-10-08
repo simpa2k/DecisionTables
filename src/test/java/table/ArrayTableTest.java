@@ -238,7 +238,7 @@ public class ArrayTableTest {
 
         arrayTable.getColumn(0);
 
-        verify(mockColumnFactory.create(THREE_ROW_ITEMS));
+        verify(mockColumnFactory).create(THREE_ROW_ITEMS);
 
     }
 }
