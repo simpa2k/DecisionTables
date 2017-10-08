@@ -17,8 +17,15 @@ public class ArrayTableTest {
 
     private final ArrayList<String> THREE_ROW_ITEMS = new ArrayList<>(Arrays.asList("v1", "v2", "v3"));
 
-    @Test
-    public void testConstructFromOtherTable() {
+    private ArrayTable createEmptyArrayTable() {
+        return new ArrayTable(mockRowFactory, mockColumnFactory);
+    }
+
+    private ArrayTable createFromOtherTable(Table other) {
+        return new ArrayTable(other, mockRowFactory, mockColumnFactory);
+    }
+
+    private ArrayTable createArrayTableWithTwoRows() {
 
         Row r1 = mock(Row.class);
         Row r2 = mock(Row.class);
@@ -26,14 +33,63 @@ public class ArrayTableTest {
         when(r1.asArrayList()).thenReturn(THREE_ROW_ITEMS);
         when(r2.asArrayList()).thenReturn(THREE_ROW_ITEMS);
 
-        ArrayTable arrayTable = new ArrayTable(mockRowFactory, mockColumnFactory);
+        ArrayTable arrayTable = createEmptyArrayTable();
 
         arrayTable.appendRow(r1);
         arrayTable.appendRow(r2);
 
         when(mockRowFactory.create(THREE_ROW_ITEMS)).thenReturn(r1, r2);
 
-        ArrayTable copy = new ArrayTable(arrayTable, mockRowFactory, mockColumnFactory);
+        return arrayTable;
+
+    }
+
+    private ArrayTable createArrayTableWithFourRows() {
+
+        Row r1 = mock(Row.class);
+        Row r2 = mock(Row.class);
+        Row r3 = mock(Row.class);
+        Row r4 = mock(Row.class);
+
+        when(r1.asArrayList()).thenReturn(THREE_ROW_ITEMS);
+        when(r2.asArrayList()).thenReturn(THREE_ROW_ITEMS);
+        when(r3.asArrayList()).thenReturn(THREE_ROW_ITEMS);
+        when(r4.asArrayList()).thenReturn(THREE_ROW_ITEMS);
+
+        when(mockRowFactory.create(THREE_ROW_ITEMS)).thenReturn(r1, r2, r3, r4);
+
+        ArrayTable arrayTable = createEmptyArrayTable();
+
+        arrayTable.appendRow(r1);
+        arrayTable.appendRow(r2);
+        arrayTable.appendRow(r3);
+        arrayTable.appendRow(r4);
+
+        return arrayTable;
+
+    }
+
+    private ArrayTable createArrayTableWithOneOutputRow() {
+
+        Row inputRow = mock(Row.class);
+        when(inputRow.asArrayList()).thenReturn(THREE_ROW_ITEMS);
+
+        Row outputRow = mock(Row.class);
+        when(mockRowFactory.create(THREE_ROW_ITEMS)).thenReturn(outputRow);
+
+        ArrayTable arrayTable = createEmptyArrayTable();
+
+        arrayTable.appendRow(inputRow);
+
+        return arrayTable;
+
+    }
+
+    @Test
+    public void testConstructFromOtherTable() {
+
+        ArrayTable arrayTable = createArrayTableWithTwoRows();
+        ArrayTable copy = createFromOtherTable(arrayTable);
 
         assertEquals(arrayTable.getColumns(), copy.getColumns());
         assertEquals(arrayTable.getRows(), copy.getRows());
@@ -72,15 +128,7 @@ public class ArrayTableTest {
     @Test
     public void testAddRow() {
 
-        Row inputRow = mock(Row.class);
-        when(inputRow.asArrayList()).thenReturn(THREE_ROW_ITEMS);
-
-        Row outputRow = mock(Row.class);
-        when(mockRowFactory.create(THREE_ROW_ITEMS)).thenReturn(outputRow);
-
-        ArrayTable arrayTable = new ArrayTable(mockRowFactory, mockColumnFactory);
-
-        arrayTable.appendRow(inputRow);
+        ArrayTable arrayTable = createArrayTableWithOneOutputRow();
         arrayTable.getRow(0);
 
         verify(mockRowFactory).create(THREE_ROW_ITEMS);
@@ -90,17 +138,7 @@ public class ArrayTableTest {
     @Test
     public void testRemoveLastRow() {
 
-        Row r1 = mock(Row.class);
-        Row r2 = mock(Row.class);
-
-        when(r1.asArrayList()).thenReturn(THREE_ROW_ITEMS);
-        when(r2.asArrayList()).thenReturn(THREE_ROW_ITEMS);
-
-        ArrayTable arrayTable = new ArrayTable(mockRowFactory, mockColumnFactory);
-
-        arrayTable.appendRow(r1);
-        arrayTable.appendRow(r2);
-
+        ArrayTable arrayTable = createArrayTableWithTwoRows();
         arrayTable.removeLastRow();
 
         assertEquals(1, arrayTable.getRows());
@@ -110,121 +148,57 @@ public class ArrayTableTest {
     @Test
     public void testGetRows() {
 
-        Row inputRow = mock(Row.class);
-        when(inputRow.asArrayList()).thenReturn(THREE_ROW_ITEMS);
-
-        Row outputRow = mock(Row.class);
-        when(mockRowFactory.create(THREE_ROW_ITEMS)).thenReturn(outputRow);
-
-        ArrayTable arrayTable = new ArrayTable(mockRowFactory, mockColumnFactory);
-
-        arrayTable.appendRow(inputRow);
-
+        ArrayTable arrayTable = createArrayTableWithOneOutputRow();
         assertEquals(1, arrayTable.getRows());
+
     }
 
     @Test
     public void testGetColumns() {
 
-        Row inputRow = mock(Row.class);
-        when(inputRow.asArrayList()).thenReturn(THREE_ROW_ITEMS);
-
-        Row outputRow = mock(Row.class);
-        when(mockRowFactory.create(THREE_ROW_ITEMS)).thenReturn(outputRow);
-
-        ArrayTable arrayTable = new ArrayTable(mockRowFactory, mockColumnFactory);
-
-        arrayTable.appendRow(inputRow);
-
+        ArrayTable arrayTable = createArrayTableWithOneOutputRow();
         assertEquals(3, arrayTable.getColumns());
+
     }
 
     @Test
     public void testGetColumnsOnEmptyTable() {
 
-        Row inputRow = mock(Row.class);
-        when(inputRow.asArrayList()).thenReturn(THREE_ROW_ITEMS);
-
-        Row outputRow = mock(Row.class);
-        when(mockRowFactory.create(THREE_ROW_ITEMS)).thenReturn(outputRow);
-
-        ArrayTable arrayTable = new ArrayTable(mockRowFactory, mockColumnFactory);
-
+        ArrayTable arrayTable = createEmptyArrayTable();
         assertEquals(0, arrayTable.getColumns());
+
     }
 
     @Test
     public void testToString() {
 
-        Row r1 = mock(Row.class);
-        Row r2 = mock(Row.class);
-
-        when(r1.asArrayList()).thenReturn(THREE_ROW_ITEMS);
-        when(r2.asArrayList()).thenReturn(THREE_ROW_ITEMS);
-
-        ArrayTable arrayTable = new ArrayTable(mockRowFactory, mockColumnFactory);
-
-        arrayTable.appendRow(r1);
-        arrayTable.appendRow(r2);
-
+        ArrayTable arrayTable = createArrayTableWithTwoRows();
         assertEquals("[v1, v2, v3]\n[v1, v2, v3]\n", arrayTable.toString());
+
 
     }
 
     @Test
     public void testRowsAsStream() {
 
-        Row r1 = mock(Row.class);
-        Row r2 = mock(Row.class);
-        Row r3 = mock(Row.class);
-        Row r4 = mock(Row.class);
-
-        when(r1.asArrayList()).thenReturn(THREE_ROW_ITEMS);
-        when(r2.asArrayList()).thenReturn(THREE_ROW_ITEMS);
-        when(r3.asArrayList()).thenReturn(THREE_ROW_ITEMS);
-        when(r4.asArrayList()).thenReturn(THREE_ROW_ITEMS);
-
-        when(mockRowFactory.create(THREE_ROW_ITEMS)).thenReturn(r1, r2, r3, r4);
-
-        ArrayTable arrayTable = new ArrayTable(mockRowFactory, mockColumnFactory);
-
-        arrayTable.appendRow(r1);
-        arrayTable.appendRow(r2);
-        arrayTable.appendRow(r3);
-        arrayTable.appendRow(r4);
+        ArrayTable arrayTable = createArrayTableWithFourRows();
 
         arrayTable.rows().forEach(row -> {
             assertEquals(row.asArrayList(), THREE_ROW_ITEMS);
         });
+
     }
 
     @Test
     public void testColumnsAsStream() {
 
-        Row r1 = mock(Row.class);
-        Row r2 = mock(Row.class);
-        Row r3 = mock(Row.class);
-        Row r4 = mock(Row.class);
-
-        when(r1.asArrayList()).thenReturn(THREE_ROW_ITEMS);
-        when(r2.asArrayList()).thenReturn(THREE_ROW_ITEMS);
-        when(r3.asArrayList()).thenReturn(THREE_ROW_ITEMS);
-        when(r4.asArrayList()).thenReturn(THREE_ROW_ITEMS);
-
-        when(mockRowFactory.create(THREE_ROW_ITEMS)).thenReturn(r1, r2, r3, r4);
+        ArrayTable arrayTable = createArrayTableWithFourRows();
 
         Column m1 = mock(Column.class);
         Column m2 = mock(Column.class);
         Column m3 = mock(Column.class);
 
         when(mockColumnFactory.create()).thenReturn(m1, m2, m3);
-
-        ArrayTable arrayTable = new ArrayTable(mockRowFactory, mockColumnFactory);
-
-        arrayTable.appendRow(r1);
-        arrayTable.appendRow(r2);
-        arrayTable.appendRow(r3);
-        arrayTable.appendRow(r4);
 
         ArrayList<Column> columns = new ArrayList<>(arrayTable.columns().collect(Collectors.toList()));
 
@@ -241,20 +215,8 @@ public class ArrayTableTest {
     @Test
     public void testEqualToEquivalentTable() {
 
-        Row r1 = mock(Row.class);
-        Row r2 = mock(Row.class);
-
-        when(r1.asArrayList()).thenReturn(THREE_ROW_ITEMS);
-        when(r2.asArrayList()).thenReturn(THREE_ROW_ITEMS);
-
-        ArrayTable arrayTable = new ArrayTable(mockRowFactory, mockColumnFactory);
-
-        arrayTable.appendRow(r1);
-        arrayTable.appendRow(r2);
-
-        when(mockRowFactory.create(THREE_ROW_ITEMS)).thenReturn(r1, r2);
-
-        ArrayTable copy = new ArrayTable(arrayTable, mockRowFactory, mockColumnFactory);
+        ArrayTable arrayTable = createArrayTableWithTwoRows();
+        ArrayTable copy = createFromOtherTable(arrayTable);
 
         assertEquals(arrayTable, copy);
 
