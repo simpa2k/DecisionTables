@@ -268,7 +268,7 @@ public class ArrayTableTest {
 
         arrayTable.appendColumnHeaders(columnHeaderRow);
 
-        assertEquals("[,c1,c2]\n[v1,v2,v3]\n[v1,v2,v3]\n", arrayTable.toString());
+        assertEquals("[, c1, c2]\n[v1, v2, v3]\n[v1, v2, v3]\n", arrayTable.toString());
 
     }
 }
