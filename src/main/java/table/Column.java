@@ -6,6 +6,12 @@ public class Column {
 
     private ArrayList<String> values = new ArrayList<>();
 
+    public Column() {}
+
+    public Column(ArrayList<String> values) {
+        this.values.addAll(values);
+    }
+
     public String getValue(int row) {
         return values.get(row);
     }

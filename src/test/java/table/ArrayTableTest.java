@@ -194,11 +194,11 @@ public class ArrayTableTest {
 
         ArrayTable arrayTable = createArrayTableWithFourRows();
 
-        Column m1 = mock(Column.class);
-        Column m2 = mock(Column.class);
-        Column m3 = mock(Column.class);
+        Column c1 = mock(Column.class);
+        Column c2 = mock(Column.class);
+        Column c3 = mock(Column.class);
 
-        when(mockColumnFactory.create()).thenReturn(m1, m2, m3);
+        when(mockColumnFactory.create()).thenReturn(c1, c2, c3);
 
         ArrayList<Column> columns = new ArrayList<>(arrayTable.columns().collect(Collectors.toList()));
 
@@ -219,6 +219,26 @@ public class ArrayTableTest {
         ArrayTable copy = createFromOtherTable(arrayTable);
 
         assertEquals(arrayTable, copy);
+
+    }
+
+    @Test
+    public void testAppendColumn() {
+
+        ArrayTable arrayTable = createEmptyArrayTable();
+
+        Column c1 = mock(Column.class);
+        when(c1.asArrayList()).thenReturn(THREE_ROW_ITEMS);
+
+        arrayTable.appendColumn(c1);
+
+        Column c2 = mock(Column.class);
+
+        when(mockColumnFactory.create(THREE_ROW_ITEMS)).thenReturn(c2);
+
+        arrayTable.getColumn(0);
+
+        verify(mockColumnFactory.create(THREE_ROW_ITEMS));
 
     }
 }
