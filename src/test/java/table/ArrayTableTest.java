@@ -281,4 +281,25 @@ public class ArrayTableTest {
         arrayTable.appendColumnHeaders(row);
 
     }
+
+    @Test
+    public void testGetColumnHeaders() {
+
+        ArrayTable arrayTable = createArrayTableWithTwoRows();
+
+        ArrayList<String> columnHeaders = new ArrayList<>(Arrays.asList("", "c1", "c2"));
+
+        Row columnHeaderRow = mock(Row.class);
+        when(columnHeaderRow.asArrayList()).thenReturn(columnHeaders);
+
+        arrayTable.appendColumnHeaders(columnHeaderRow);
+
+        Row rowToBeReturned = mock(Row.class);
+        when(mockRowFactory.create(columnHeaders)).thenReturn(rowToBeReturned);
+
+        arrayTable.getColumnHeaders();
+
+        verify(mockRowFactory).create(columnHeaders);
+
+    }
 }
