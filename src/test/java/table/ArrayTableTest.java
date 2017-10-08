@@ -255,4 +255,20 @@ public class ArrayTableTest {
         arrayTable.getColumn(-1);
 
     }
+
+    @Test
+    public void testAppendColumnHeaders() {
+
+        ArrayTable arrayTable = createArrayTableWithTwoRows();
+
+        ArrayList<String> columnHeaders = new ArrayList<>(Arrays.asList("", "c1", "c2"));
+
+        Row columnHeaderRow = mock(Row.class);
+        when(columnHeaderRow.asArrayList()).thenReturn(columnHeaders);
+
+        arrayTable.appendColumnHeaders(columnHeaderRow);
+
+        assertEquals("[,c1,c2]\n[v1,v2,v3]\n[v1,v2,v3]\n", arrayTable.toString());
+
+    }
 }
