@@ -142,7 +142,7 @@ public class ArrayTable implements Table {
 
     @Override
     public Row getColumnHeaders() {
-        return null;
+        return getRow(0);
     }
 
     @Override
