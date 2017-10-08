@@ -157,15 +157,7 @@ public class ArrayTable implements Table {
         ArrayList<Column> columns = new ArrayList<>();
 
         for (int x = 0; x < table.get(0).size(); x++) {
-
-            Column column = columnFactory.create();
-
-            for (ArrayList<String> row : table) {
-                column.append(row.get(x));
-            }
-
-            columns.add(column);
-
+            columns.add(getColumn(x));
         }
         return columns.stream();
 
