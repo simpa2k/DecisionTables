@@ -247,4 +247,12 @@ public class ArrayTableTest {
         verify(c2).append(THREE_ROW_ITEMS.get(2));
 
     }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testAppendColumnWithNegativeIndex() {
+
+        ArrayTable arrayTable = createEmptyArrayTable();
+        arrayTable.getColumn(-1);
+
+    }
 }
