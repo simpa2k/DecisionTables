@@ -11,6 +11,7 @@ import java.util.stream.Stream;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
 
 public class TableReducerTest {
@@ -143,6 +144,32 @@ public class TableReducerTest {
         Table reducedTable = tableReducer.reduce();
 
         assertEquals(correct, reducedTable);
+
+    }
+
+    @Test
+    public void testHandlesPermutationsOfThreeNonResultRows() {
+
+        List<String> r1 = Arrays.asList("r1", "T" , "T" , "T" , "T", "F", "F", "F", "F");
+        List<String> r2 = Arrays.asList("r2", "T" , "T" , "F" , "F", "T", "T", "F", "F");
+        List<String> r3 = Arrays.asList("r3", "T" , "F" , "T" , "F", "T", "F", "T", "F");
+        List<String> r4 = Arrays.asList("r4", "Y" , "Y" , "N" , "N", "Y", "Y", "N", "N");
+
+        TableFactory tableFactory = new TableFactory();
+        Table table = tableFactory.create(Arrays.asList(r1, r2, r3, r4));
+
+        List<String> r5 = Arrays.asList("r2", "T", "F");
+        List<String> r6 = Arrays.asList("r1", "*", "*");
+        List<String> r7 = Arrays.asList("r3", "*", "*");
+        List<String> r8 = Arrays.asList("r4", "Y", "N");
+
+        Table correctAlternative1 = tableFactory.create(Arrays.asList(r5, r6, r7, r8));
+        Table correctAlternative2 = tableFactory.create(Arrays.asList(r5, r7, r6, r8));
+
+        TableReducer tableReducer = new TableReducer(table, tableFactory, new TablePermuter(table, tableFactory));
+        Table reducedTable = tableReducer.reduce();
+
+        assertTrue(reducedTable.equals(correctAlternative1) || reducedTable.equals(correctAlternative2));
 
     }
 }

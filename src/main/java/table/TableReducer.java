@@ -1,8 +1,9 @@
 package table;
 
 import java.util.*;
-import java.util.stream.Collector;
+import java.util.concurrent.*;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class TableReducer {
 
@@ -35,31 +36,52 @@ public class TableReducer {
 
     public Table reduce() {
 
-        this.reducedTable = table;
-        this.reducedTable.removeColumnHeaders();
+        Row resultRow = table.getRow(table.getRows() - 1);
+        table.removeLastRow();
 
-        List<Table> permutations = tablePermuter.getPermutations();
+        LinkedList<Table> permutations = new LinkedList<>(tablePermuter.getPermutations());
+        List<Table> reduced = new ArrayList<>();
 
-        Column rowLabels = null;
+        final int numThreads = Runtime.getRuntime().availableProcessors() + 1;
 
-        for (Table table : permutations) {
+        ExecutorService executor = Executors.newFixedThreadPool(numThreads);
+        executor.submit(() -> reducePermutations(resultRow, permutations, reduced));
+
+        executor.shutdown();
+
+        try {
+
+            executor.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS); // ToDo: Might be better to return Futures
+            reduced.sort(Comparator.comparingInt(Table::getColumns));
+
+            return reduced.get(0);
+
+        } catch (InterruptedException e) {
+
+            e.printStackTrace();
+            return null;
+
+        }
+    }
+
+    private void reducePermutations(Row resultRow, LinkedList<Table> permutations, List<Table> reduced) {
+
+        Table table;
+        while((table = permutations.poll()) != null) {
+
+            table.appendRow(resultRow);
 
             Table reducedTable = tableFactory.create();
             reduce(0, table.columns().collect(Collectors.toList()), reducedTable);
 
-            if (reducedTable.getColumns() > 0 && reducedTable.getColumns() < this.reducedTable.getColumns()) {
+            if (reducedTable.getColumns() > 0) {
 
-                this.reducedTable = reducedTable;
-                rowLabels = table.getColumn(0);
+                reducedTable.insertColumn(0, table.getColumn(0));
+                reduced.add(reducedTable);
 
             }
+
         }
-
-        reducedTable.insertColumn(0, rowLabels);
-        reducedTable.appendColumnHeaders(table.getColumnHeaders());
-
-        return reducedTable;
-
     }
 
     private void reduce(int row, List<Column> columnsList, Table table) {

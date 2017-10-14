@@ -19,6 +19,7 @@ public class ArrayTableTest {
     private ColumnFactory mockColumnFactory = mock(ColumnFactory.class);
 
     private final ArrayList<String> THREE_ROW_ITEMS = new ArrayList<>(Arrays.asList("v1", "v2", "v3"));
+    private final ArrayList<String> TWO_ITEMS = new ArrayList<>(Arrays.asList("v1", "v2"));
 
     private ArrayTable createEmptyArrayTable() {
         return new ArrayTable(mockRowFactory, mockColumnFactory);
@@ -83,6 +84,41 @@ public class ArrayTableTest {
         ArrayTable arrayTable = createEmptyArrayTable();
 
         arrayTable.appendRow(inputRow);
+
+        return arrayTable;
+
+    }
+
+    private ArrayTable createArrayTableWithThreeColumns() {
+
+        Column c1 = mock(Column.class);
+        Column c2 = mock(Column.class);
+
+        when(c1.asArrayList()).thenReturn(TWO_ITEMS);
+        when(c2.asArrayList()).thenReturn(TWO_ITEMS);
+
+        ArrayTable arrayTable = createEmptyArrayTable();
+
+        arrayTable.appendColumn(c1);
+        arrayTable.appendColumn(c2);
+        arrayTable.appendColumn(c2);
+
+        return arrayTable;
+
+    }
+
+    private ArrayTable createArrayTableWithTwoColumns() {
+
+        Column c1 = mock(Column.class);
+        Column c2 = mock(Column.class);
+
+        when(c1.asArrayList()).thenReturn(TWO_ITEMS);
+        when(c2.asArrayList()).thenReturn(TWO_ITEMS);
+
+        ArrayTable arrayTable = createEmptyArrayTable();
+
+        arrayTable.appendColumn(c1);
+        arrayTable.appendColumn(c2);
 
         return arrayTable;
 
