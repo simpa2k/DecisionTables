@@ -74,7 +74,7 @@ public class ArrayTable implements Table {
 
     @Override
     public void appendRow(Row row) {
-        table.add(row.asArrayList());
+        table.add(new ArrayList<>(row.asArrayList()));
     }
 
     @Override
@@ -121,8 +121,35 @@ public class ArrayTable implements Table {
     }
 
     @Override
+    public void insertColumn(int index, Column column) {
+
+        ArrayList<String> columnAsList = column.asArrayList();
+
+        for (int i = 0; i < columnAsList.size(); i++) {
+
+            ArrayList<String> currentRow;
+
+            if (table.size() <= i) {
+
+                currentRow = new ArrayList<>();
+                table.add(i, currentRow);
+
+            } else {
+                currentRow = table.get(i);
+            }
+
+            currentRow.add(0, columnAsList.get(i));
+        }
+    }
+
+    @Override
     public void removeLastRow() {
         table.remove(table.size() - 1);
+    }
+
+    @Override
+    public void removeColumnHeaders() {
+        columnHeaders.clear();
     }
 
     @Override

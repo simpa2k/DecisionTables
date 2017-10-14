@@ -26,7 +26,11 @@ public interface Table {
 
     void insertRow(int index, Row row);
 
+    void insertColumn(int index, Column column);
+
     void removeLastRow();
+
+    void removeColumnHeaders();
 
     Column getColumn(int column);
 

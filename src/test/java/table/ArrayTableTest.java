@@ -147,11 +147,19 @@ public class ArrayTableTest {
     }
 
     @Test
-    public void testGetRows() {
+    public void testRemoveColumnHeaders() {
 
-        ArrayTable arrayTable = createArrayTableWithOneOutputRow();
-        assertEquals(1, arrayTable.getRows());
+        ArrayList<String> columnHeaderLabels = new ArrayList<>(Arrays.asList("c1", "c2", "c3"));
 
+        Row columnHeaders = mock(Row.class);
+        when(columnHeaders.asArrayList()).thenReturn(columnHeaderLabels);
+
+        ArrayTable arrayTable = createArrayTableWithTwoRows();
+
+        arrayTable.appendColumnHeaders(columnHeaders);
+        arrayTable.removeColumnHeaders();
+
+        assertEquals("[v1, v2, v3]\n[v1, v2, v3]\n", arrayTable.toString());
     }
 
     @Test
@@ -220,6 +228,20 @@ public class ArrayTableTest {
         ArrayTable copy = createFromOtherTable(arrayTable);
 
         assertEquals(arrayTable, copy);
+
+    }
+
+    @Test
+    public void testInsertColumn() {
+
+        Column c1 = mock(Column.class);
+        when(c1.asArrayList()).thenReturn(THREE_ROW_ITEMS);
+
+        ArrayTable arrayTable = createArrayTableWithTwoRows();
+
+        arrayTable.insertColumn(0, c1);
+
+        assertEquals(4, arrayTable.getColumns());
 
     }
 

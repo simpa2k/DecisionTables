@@ -1,6 +1,8 @@
 package table;
 
 import java.util.*;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 public class TableReducer {
 
@@ -33,19 +35,34 @@ public class TableReducer {
 
     public Table reduce() {
 
-        List<Table> permutations = tablePermuter.getPermutations();
-        reduce(1);
+        this.reducedTable = table;
+        this.reducedTable.removeColumnHeaders();
 
-        //reducedTable.appendColumn(table.getColumn(0));
+        List<Table> permutations = tablePermuter.getPermutations();
+
+        Column rowLabels = null;
+
+        for (Table table : permutations) {
+
+            Table reducedTable = tableFactory.create();
+            reduce(0, table.columns().collect(Collectors.toList()), reducedTable);
+
+            if (reducedTable.getColumns() > 0 && reducedTable.getColumns() < this.reducedTable.getColumns()) {
+                this.reducedTable = reducedTable;
+                rowLabels = table.getColumn(0);
+            }
+        }
+
+        reducedTable.insertColumn(0, rowLabels);
         reducedTable.appendColumnHeaders(table.getColumnHeaders());
 
         return reducedTable;
 
     }
 
-    private void reduce(int row) {
+    private void reduce(int row, List<Column> columnsList, Table table) {
 
-        Collection<ArrayList<Column>> columnsByValue = pickOutSameValues(row);
+        Collection<ArrayList<Column>> columnsByValue = pickOutSameValues(columnsList, row);
 
         columnsByValue.forEach(columns -> {
 
@@ -56,20 +73,20 @@ public class TableReducer {
                     .distinct()
                     .count() <= 1) { // All ending points the same.
 
-                    reducedTable.appendColumn(columns.get(0).replaceAllFromRow(row, "*"));
+                    table.appendColumn(columns.get(0).replaceAllFromRow(row + 1, "*"));
 
                 } else {
-                    reduce(row + 1);
+                    reduce(row + 1, columns, table);
                 }
             }
         });
     }
 
-    private Collection<ArrayList<Column>> pickOutSameValues(int row) {
+    private Collection<ArrayList<Column>> pickOutSameValues(List<Column> columnsList, int row) {
 
         Map<String, ArrayList<Column>> columnsByValue = new HashMap<>();
 
-        table.columns().forEach(column -> {
+        columnsList.forEach(column -> {
 
             String value = column.getValue(row);
             ArrayList<Column> columns = columnsByValue.get(value);
