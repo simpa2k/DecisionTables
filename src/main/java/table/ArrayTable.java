@@ -188,8 +188,11 @@ public class ArrayTable implements Table {
 
         ArrayList<Column> columns = new ArrayList<>();
 
-        for (int x = 0; x < table.get(0).size(); x++) {
-            columns.add(getColumn(x));
+        if (table.size() > 0) {
+
+            for (int x = 0; x < table.get(0).size(); x++) {
+                columns.add(getColumn(x));
+            }
         }
         return columns.stream();
 

@@ -48,8 +48,10 @@ public class TableReducer {
             reduce(0, table.columns().collect(Collectors.toList()), reducedTable);
 
             if (reducedTable.getColumns() > 0 && reducedTable.getColumns() < this.reducedTable.getColumns()) {
+
                 this.reducedTable = reducedTable;
                 rowLabels = table.getColumn(0);
+
             }
         }
 
