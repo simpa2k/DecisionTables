@@ -117,7 +117,7 @@ public class ArrayTable implements Table {
 
     @Override
     public void insertRow(int index, Row row) {
-
+        table.add(index, row.asArrayList());
     }
 
     @Override
@@ -140,6 +140,11 @@ public class ArrayTable implements Table {
 
             currentRow.add(0, columnAsList.get(i));
         }
+    }
+
+    @Override
+    public Row removeRow(int row) {
+        return rowFactory.create(table.remove(row));
     }
 
     @Override

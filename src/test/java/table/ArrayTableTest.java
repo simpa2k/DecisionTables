@@ -175,6 +175,25 @@ public class ArrayTableTest {
     }
 
     @Test
+    public void testRemoveRow() {
+
+        ArrayTable arrayTable = createArrayTableWithTwoRows();
+        Row row = arrayTable.removeRow(0);
+
+        assertEquals(1, arrayTable.getRows());
+        assertEquals(THREE_ROW_ITEMS, row.asArrayList());
+
+    }
+
+    @Test(expected = IndexOutOfBoundsException.class)
+    public void testRemoveRowOnEmptyTable() {
+
+        ArrayTable arrayTable = createEmptyArrayTable();
+        arrayTable.removeRow(0);
+
+    }
+
+    @Test
     public void testRemoveLastRow() {
 
         ArrayTable arrayTable = createArrayTableWithTwoRows();
@@ -276,6 +295,20 @@ public class ArrayTableTest {
         ArrayTable copy = createFromOtherTable(arrayTable);
 
         assertEquals(arrayTable, copy);
+
+    }
+
+    @Test
+    public void testInsertRow() {
+
+        Row r1 = mock(Row.class);
+        when(r1.asArrayList()).thenReturn(THREE_ROW_ITEMS);
+
+        ArrayTable arrayTable = createArrayTableWithTwoRows();
+
+        arrayTable.insertRow(0, r1);
+
+        assertEquals(3, arrayTable.getRows());
 
     }
 

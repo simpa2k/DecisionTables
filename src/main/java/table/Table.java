@@ -28,6 +28,8 @@ public interface Table {
 
     void insertColumn(int index, Column column);
 
+    Row removeRow(int row);
+
     void removeLastRow();
 
     void removeColumnHeaders();
