@@ -8,7 +8,6 @@ import java.util.stream.IntStream;
 public class TableReducer {
 
     private Table table;
-    private Table reducedTable;
     private TableFactory tableFactory;
     private TablePermuter tablePermuter;
 
@@ -29,8 +28,6 @@ public class TableReducer {
         this.table = table;
         this.tableFactory = tableFactory;
         this.tablePermuter = tablePermuter;
-
-        reducedTable = tableFactory.create();
 
     }
 
@@ -80,7 +77,6 @@ public class TableReducer {
                 reduced.add(reducedTable);
 
             }
-
         }
     }
 
