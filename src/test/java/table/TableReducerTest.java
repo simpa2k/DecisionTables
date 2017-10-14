@@ -126,20 +126,18 @@ public class TableReducerTest {
     @Test
     public void testHandlesPermutationsOfSimpleTable() {
 
-        List<String> r1 = Arrays.asList(""  , "c1", "c2", "c3", "c4");
-        List<String> r2 = Arrays.asList("r1", "T" , "F" , "T" , "F");
-        List<String> r3 = Arrays.asList("r2", "T" , "T" , "F" , "F");
-        List<String> r4 = Arrays.asList("r3", "Y" , "Y" , "N" , "N");
+        List<String> r1 = Arrays.asList("r1", "T" , "F" , "T" , "F");
+        List<String> r2 = Arrays.asList("r2", "T" , "T" , "F" , "F");
+        List<String> r3 = Arrays.asList("r3", "Y" , "Y" , "N" , "N");
 
         TableFactory tableFactory = new TableFactory();
-        Table table = tableFactory.create(Arrays.asList(r2, r3, r4));
-        table.appendColumnHeaders(new Row(new ArrayList<>(r1)));
+        Table table = tableFactory.create(Arrays.asList(r1, r2, r3));
 
-        List<String> r5 = Arrays.asList("r2", "T", "F");
-        List<String> r6 = Arrays.asList("r1", "*", "*");
-        List<String> r7 = Arrays.asList("r3", "Y", "N");
+        List<String> r4 = Arrays.asList("r2", "T", "F");
+        List<String> r5 = Arrays.asList("r1", "*", "*");
+        List<String> r6 = Arrays.asList("r3", "Y", "N");
 
-        Table correct = tableFactory.create(Arrays.asList(r5, r6, r7));
+        Table correct = tableFactory.create(Arrays.asList(r4, r5, r6));
 
         TableReducer tableReducer = new TableReducer(table, tableFactory, new TablePermuter(table, tableFactory));
         Table reducedTable = tableReducer.reduce();
