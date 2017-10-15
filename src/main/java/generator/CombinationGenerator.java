@@ -27,7 +27,6 @@ public class CombinationGenerator extends Generator {
             int currentIndex = 0;
 
             for (int repetitions = 0; repetitions < numberOfColumns && currentIndex < numberOfColumns; repetitions++) {
-
                 for (int column = 1; column < lines.get(row).length; column++) {
 
                     double characterRepetitions = Math.pow(2, lines.size() - 1) - row;

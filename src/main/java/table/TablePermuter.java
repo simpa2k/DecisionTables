@@ -43,19 +43,19 @@ public class TablePermuter {
 
     }
 
+    public List<Table> getPermutations() {
+
+        LinkedList<Table> jobs = createJobs();
+        return getPermutationsThreaded(jobs);
+        //return getPermutations(new ArrayList<>(), tableFactory.create(), new ArrayList<>());
+
+    }
+
     /*
      * The following method is a translation of a Python implementation found at:
      * https://www.quora.com/How-do-I-generate-all-the-row-permutations-from-a-given-2D-array-recursively
      */
-    public List<Table> getPermutations() {
-
-        LinkedList<Table> jobs = createJobs();
-        //return getPermutations(new ArrayList<>(), tableFactory.create(), new ArrayList<>());
-        return getPermutationsThreaded(jobs);
-
-    }
-
-    private List<Table> getPermutations(ArrayList<Integer> indicesPlaced,
+    /*private List<Table> getPermutations(ArrayList<Integer> indicesPlaced,
                                         Table currentAnswer,
                                         List<Table> answers) {
 
@@ -80,7 +80,7 @@ public class TablePermuter {
 
         return answers;
 
-    }
+    }*/
 
     private List<Table> getPermutationsThreaded(LinkedList<Table> jobs) {
 
